@@ -100,5 +100,21 @@ botao4_remover = Button(janela_menu,
                 relief='groove',
                 command=lambda:decrementa_do_carrinho('item4'))
 botao4_remover.place(x=1050,y=585, width=80,height=30) 
+from tkinter import messagebox
+
+def prosseguir_compra():
+    total = sum(contador_itens.values())
+    if total == 0:
+        messagebox.showwarning("Carrinho vazio", "Adicione itens ao carrinho antes de prosseguir.")
+    else:
+        messagebox.showinfo("Compra iniciada", f"Você está comprando {total} item(ns).")
+
+botao_prosseguir = Button(janela_menu,
+                          text="Prosseguir com a compra",
+                          fg="white",
+                          bg="green",
+                          font=("Arial", 12, "bold"),
+                          command=prosseguir_compra)
+botao_prosseguir.place(x=550, y=700, width=200, height=40)
 
 janela_menu.mainloop()
