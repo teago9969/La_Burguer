@@ -1,0 +1,112 @@
+from tkinter import *
+from PIL import ImageTk, Image
+from tkinter import messagebox
+from y_finalizar_compra import finalizar_compra
+
+janela_menu = Tk()
+janela_menu.title("La_burguer_menu")
+janela_menu.geometry("1300x1000")
+
+papel_parede = Image.open("/home/joao-pedro/Documents/GitHub/La-Burguer/imagens/La-burguer (2).png")
+tk_imagem = ImageTk.PhotoImage(papel_parede)
+label_da_imagem = Label(janela_menu, image=tk_imagem)
+label_da_imagem.pack()
+
+def atualizar_contadores(item):
+    label_do_contador[item].config(text=str(contador_itens[item]))
+
+def adiciona_do_contador(item):
+    contador_itens[item] += 1
+    atualizar_contadores(item)
+
+def decrementa_do_carrinho(item):
+    if contador_itens[item] > 0:
+        contador_itens[item] -= 1
+        atualizar_contadores(item)
+
+contador_itens = {
+    'item1': 0,
+    'item2': 0,
+    'item3': 0,
+    'item4': 0
+}
+
+label_do_contador = {
+    'item1': Label(janela_menu, text="0"),
+    'item2': Label(janela_menu, text="0"),
+    'item3': Label(janela_menu, text="0"),
+    'item4': Label(janela_menu, text="0")
+}
+
+label_do_contador['item1'].place(x=200, y=600)
+label_do_contador['item2'].place(x=480, y=600)
+label_do_contador['item3'].place(x=730, y=600)
+label_do_contador['item4'].place(x=1000, y=600)
+
+Button(janela_menu, text='Adicionar ao carrinho', fg='blue',
+       command=lambda: adiciona_do_contador('item1')).place(x=200, y=550, width=135, height=35)
+Button(janela_menu, text='Adicionar ao carrinho', fg='blue',
+       command=lambda: adiciona_do_contador('item2')).place(x=480, y=550, width=135, height=35)
+Button(janela_menu, text='Adicionar ao carrinho', fg='blue',
+       command=lambda: adiciona_do_contador('item3')).place(x=730, y=550, width=135, height=35)
+Button(janela_menu, text='Adicionar ao carrinho', fg='blue',
+       command=lambda: adiciona_do_contador('item4')).place(x=1000, y=550, width=135, height=35)
+
+Button(janela_menu, text='X', fg='red', bd=8, relief='groove',
+       command=lambda: decrementa_do_carrinho('item1')).place(x=250, y=585, width=80, height=30)
+Button(janela_menu, text='X', fg='red', bd=8, relief='groove',
+       command=lambda: decrementa_do_carrinho('item2')).place(x=520, y=585, width=80, height=30)
+Button(janela_menu, text='X', fg='red', bd=8, relief='groove',
+       command=lambda: decrementa_do_carrinho('item3')).place(x=780, y=585, width=80, height=30)
+Button(janela_menu, text='X', fg='red', bd=8, relief='groove',
+       command=lambda: decrementa_do_carrinho('item4')).place(x=1050, y=585, width=80, height=30)
+
+def prosseguir_compra():
+    total = sum(contador_itens.values())
+    if total == 0:
+        messagebox.showwarning("Carrinho vazio", "Adicione itens ao carrinho antes de prosseguir.")
+    else:
+        finalizar_compra(contador_itens)
+
+Button(janela_menu, text="Prosseguir com a compra", fg="white", bg="green",
+       font=("Arial", 12, "bold"), command=prosseguir_compra).place(x=550, y=630, width=200, height=40)
+
+janela_menu.mainloop()
+
+from tkinter import *
+from tkinter import messagebox
+
+def finalizar_compra(contador_itens):
+    janela_pagamento = Toplevel()
+    janela_pagamento.title("Pagamento")
+    janela_pagamento.geometry("400x300")
+
+    precos = {
+        'item1': 15.0,
+        'item2': 20.0,
+        'item3': 25.0,
+        'item4': 30.0
+    }
+
+    total = sum(contador_itens[item] * precos[item] for item in contador_itens)
+
+    Label(janela_pagamento, text=f"Total da compra: R$ {total:.2f}", font=("Arial", 14)).pack(pady=20)
+    Label(janela_pagamento, text="Valor pago: R$", font=("Arial", 12)).pack()
+
+    entrada_valor_pago = Entry(janela_pagamento, font=("Arial", 12))
+    entrada_valor_pago.pack()
+
+    def calcular_troco():
+        try:
+            valor_pago = float(entrada_valor_pago.get())
+            if valor_pago < total:
+                messagebox.showerror("Erro", "Valor insuficiente para pagamento.")
+            else:
+                troco = valor_pago - total
+                messagebox.showinfo("Pagamento concluído", f"Troco: R$ {troco:.2f}")
+                janela_pagamento.destroy()
+        except ValueError:
+            messagebox.showerror("Erro", "Digite um valor numérico válido.")
+
+    Button(janela_pagamento, text="Confirmar pagamento", command=calcular_troco,
+           bg="green", fg="white", font=("Arial", 12, "bold")).pack(pady=20)
