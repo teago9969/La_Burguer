@@ -137,20 +137,26 @@ def finalizar_compra():
     cardapio = {"Classico da casa":24,
                 "Egg burguer":25,
                 "Smash Tradicional":27,
-                "Cheese e bacon":28} 
-    
-    
-    valor_pago = 0
+                "Cheese e bacon":28}
+     
+    ##---------------- valor total da compra -------------------------##
+    valor_total = 0
+
+    ##--------------------somando o preço dos lanches --------------##
+    valor_lanche = 0
     contador = 1
     for chave,valor in cardapio.items():
-        valor_pago = valor*contador_itens[f'item{contador}']
-        cardapio[chave] = valor_pago
+        valor_lanche = valor*contador_itens[f'item{contador}']
+        cardapio[chave] = valor_lanche
+        valor_total += valor_lanche
         contador+=1
-    
+ 
+  ##--------------------exibindo os lanches selecionados --------------##
     for item, quantidade in cardapio.items():
-        Label(frame_itens,text=f"{item} : {quantidade}",
+        Label(frame_itens,text=f"{item} : {quantidade}R$",
                   font="Aerial 12").pack()
-            
+    preco_a_pagar = Label(frame_itens,text=f"valor total: {valor_total}R$" ,font="Aerial 12")
+    preco_a_pagar.pack()   
 
     janela_finaalizar.mainloop()
 
