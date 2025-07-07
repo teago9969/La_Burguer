@@ -3,14 +3,14 @@ from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
 
-from y_finalizar_compra import finalizar_compra
+
 ##---------Interface da janela --------------------##
 janela_menu = Tk()
 janela_menu.title("La_burguer_menu")
 janela_menu.geometry("1300x1000")
 
 ##---------------imagem do la burguer -----------##
-papel_parede = Image.open("/home/joao-pedro/Documents/GitHub/La-Burguer/imagens/La-burguer (2).png")
+papel_parede = Image.open("/home/joao-pedro/Documents/GitHub/La_Burguer/imagens/La-burguer (2).png")
 tk_imagem = ImageTk.PhotoImage(papel_parede)
 label_da_imagem = Label(janela_menu, image=tk_imagem)
 label_da_imagem.pack()
@@ -119,5 +119,39 @@ botao_prosseguir = Button(janela_menu,
                           font=("Arial", 12, "bold"),
                           command=prosseguir_compra)
 botao_prosseguir.place(x=550, y=630, width=200, height=40)
+
+##-----------------janela finalizar compra------------------------------------##
+def finalizar_compra():
+    janela_finaalizar = Toplevel()
+    janela_finaalizar.title("Finalizar compra")
+    janela_finaalizar.geometry("500x500")
+
+    #-----mostrando os itens ------------#
+    frame_itens = Frame(janela_finaalizar)
+    frame_itens.pack(pady=20)
+
+    titulo = Label(frame_itens,text="Itens selecionados")
+    titulo.pack()
+     
+    ##-------cardapio para exibir o valor da compra------------## 
+    cardapio = {"Classico da casa":24,
+                "Egg burguer":25,
+                "Smash Tradicional":27,
+                "Cheese e bacon":28} 
+    
+    
+    valor_pago = 0
+    contador = 1
+    for chave,valor in cardapio.items():
+        valor_pago = valor*contador_itens[f'item{contador}']
+        cardapio[chave] = valor_pago
+        contador+=1
+    
+    for item, quantidade in cardapio.items():
+        Label(frame_itens,text=f"{item} : {quantidade}",
+                  font="Aerial 12").pack()
+            
+
+    janela_finaalizar.mainloop()
 
 janela_menu.mainloop()
