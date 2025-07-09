@@ -82,14 +82,14 @@ def finalizar_compra():
     frame_itens.pack(pady=20)
 
     Label(frame_itens, text="Itens selecionados", font="Arial 14 bold").pack()
-
+##--------------- cardápio ---------------------------------------------------------##
     cardapio = {
         "Classico da casa": 24,
         "Egg burguer": 25,
         "Smash Tradicional": 27,
         "Cheese e bacon": 28
     }
-
+##--------------------- logica para calcular o preço a ser pago -------------------------##
     valor_total = 0
     contador = 1
     for nome, preco in cardapio.items():
@@ -105,7 +105,7 @@ def finalizar_compra():
     Label(janela_finaalizar, text="Digite o valor pago (R$):", font="Arial 12").pack(pady=5)
     entrada_valor_pago = Entry(janela_finaalizar, font="Arial 12")
     entrada_valor_pago.pack()
-
+##---------------------------------lógica para calcular o troco -----------------------------------##
     def calcular_troco():
         try:
             valor_pago = float(entrada_valor_pago.get())
@@ -121,5 +121,5 @@ def finalizar_compra():
     Button(janela_finaalizar, text="Confirmar pagamento", command=calcular_troco,
            bg="green", fg="white", font=("Arial", 12, "bold")).pack(pady=20)
 
-# ---- Executa a janela principal ---- #
+##-------------------------- Executa a janela principal -----------------------##
 janela_menu.mainloop()
