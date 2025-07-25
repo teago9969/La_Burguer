@@ -1,6 +1,55 @@
 from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
+import mysql.connector
+
+##-----------------Conectando ao banco de dados -----------------##
+def conectar_banco():
+    global conexao
+    try:
+        ## -----------------entrar no mysql ------------- ##
+        conexao = mysql.connector.connect(
+                host='localhost',
+                user = 'root',
+                password = ' ( o _ 0 )',
+            
+            )
+        cursor = conexao.cursor()
+        ## -------- Criação do banco de dados caso não exista-------- ##
+        cursor.execute('CREATE DATABASE IF NOT EXISTS la_burguer')
+        cursor.close()
+        conexao.close()
+
+        ##----------------- Reconecar ao banco, para evitar erro ---------- ##
+        conexao = mysql.connector.connect(
+                host='localhost',
+                user='root',
+                password='( o _ 0 )',
+                database='la_burguer'
+            )
+        cursor = conexao.cursor()
+            
+        ## -------- Criação da tabela caso não exista--------- ##
+        tabela  = ('''CREATE TABLE IF NOT EXISTS pedidos (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            lanche VARCHAR(255), 
+            quantidade INT, 
+            preco FLOAT, 
+            VENDAS INT )''')
+        
+        cursor.execute(tabela)
+        conexao.commit()
+        cursor.close()
+        messagebox.showinfo("Conectado com sucesso")
+    except mysql.connector.Error as err:
+        print(f"Erro ao conectar ao banco de dados: {err}")
+        messagebox.showerror("Erro", "Não foi possível conectar ao banco de dados.")
+        exit()
+  
+    
+
+
+
 
 # ---- Janela principal ---- #
 janela_menu = Tk()
