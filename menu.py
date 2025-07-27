@@ -11,7 +11,7 @@ def conectar_banco():
         conexao = mysql.connector.connect(
             host='localhost',
             user='root',
-            password=''  # <-- Coloque a senha correta aqui, se tiver
+            password=''  # <-- Coloque a senha correta, se necessário
         )
         cursor = conexao.cursor()
         cursor.execute('CREATE DATABASE IF NOT EXISTS la_burguer')
@@ -38,10 +38,10 @@ def conectar_banco():
         messagebox.showerror("Erro", f"Erro ao conectar ao banco: {err}")
         exit()
 
-# ---------------- Tela inicial ----------------
+# ---------------- Janela inicial ----------------
 def abrir_menu():
-    janela_inicial.destroy()
-    janela_menu.deiconify()
+    janela_menu.deiconify()       # Mostra a janela do menu
+    janela_inicial.withdraw()     # Oculta a janela inicial
 
 janela_inicial = Tk()
 janela_inicial.title("La Burguer - Início")
@@ -50,14 +50,14 @@ Label(janela_inicial, text="Bem-vindo ao La Burguer", font=("Arial", 20, "bold")
 Button(janela_inicial, text="Acessar Menu", font=("Arial", 14), bg="green", fg="white", command=abrir_menu).pack(pady=10)
 Button(janela_inicial, text="Conectar ao Banco", font=("Arial", 14), bg="blue", fg="white", command=conectar_banco).pack(pady=10)
 
-# ---------------- Janela principal (oculta no início) ----------------
-janela_menu = Toplevel()
+# ---------------- Janela do Menu (inicialmente oculta) ----------------
+janela_menu = Toplevel(janela_inicial)
 janela_menu.withdraw()
 janela_menu.title("La Burguer - Menu")
 janela_menu.geometry("1300x1000")
 
 # --- Imagem de fundo ---
-caminho_imagem = "la_burguer.png"  # Caminho relativo, coloque a imagem na mesma pasta
+caminho_imagem = "la_burguer.png"  # Certifique-se que a imagem está na mesma pasta
 
 if os.path.exists(caminho_imagem):
     imagem = Image.open(caminho_imagem)
@@ -92,6 +92,7 @@ def decrementa_do_carrinho(item):
         contador_itens[item] -= 1
         atualizar_contadores(item)
 
+# Botões de adicionar
 Button(janela_menu, text='Adicionar ao carrinho', fg='blue',
        command=lambda: adiciona_do_contador('item1')).place(x=200, y=550, width=135, height=35)
 Button(janela_menu, text='Adicionar ao carrinho', fg='blue',
@@ -101,6 +102,7 @@ Button(janela_menu, text='Adicionar ao carrinho', fg='blue',
 Button(janela_menu, text='Adicionar ao carrinho', fg='blue',
        command=lambda: adiciona_do_contador('item4')).place(x=1000, y=550, width=135, height=35)
 
+# Botões de remover
 Button(janela_menu, text='X', fg='red', bd=8, relief='groove',
        command=lambda: decrementa_do_carrinho('item1')).place(x=250, y=585, width=80, height=30)
 Button(janela_menu, text='X', fg='red', bd=8, relief='groove',
@@ -110,6 +112,7 @@ Button(janela_menu, text='X', fg='red', bd=8, relief='groove',
 Button(janela_menu, text='X', fg='red', bd=8, relief='groove',
        command=lambda: decrementa_do_carrinho('item4')).place(x=1050, y=585, width=80, height=30)
 
+# Botão de pagamento
 def prosseguir_compra():
     total = sum(contador_itens.values())
     if total == 0:
@@ -120,6 +123,7 @@ def prosseguir_compra():
 Button(janela_menu, text="Prosseguir com a compra", fg="white", bg="green",
        font=("Arial", 12, "bold"), command=prosseguir_compra).place(x=550, y=630, width=200, height=40)
 
+# Finalizar compra e calcular troco
 def finalizar_compra():
     janela_finalizar = Toplevel()
     janela_finalizar.title("Finalizar compra")
@@ -167,5 +171,5 @@ def finalizar_compra():
     Button(janela_finalizar, text="Confirmar pagamento", command=calcular_troco,
            bg="green", fg="white", font=("Arial", 12, "bold")).pack(pady=20)
 
-# ---------------- Iniciar programa ----------------
+# ---------------- Iniciar o loop da janela inicial ----------------
 janela_inicial.mainloop()
