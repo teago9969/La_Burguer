@@ -2,6 +2,7 @@ from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
 import mysql.connector
+import os
 
 # ---------------- Conectar ao banco ----------------
 def conectar_banco():
@@ -10,7 +11,7 @@ def conectar_banco():
         conexao = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='( o _ 0 )'
+            password=''  # <-- Coloque a senha correta aqui, se tiver
         )
         cursor = conexao.cursor()
         cursor.execute('CREATE DATABASE IF NOT EXISTS la_burguer')
@@ -20,7 +21,7 @@ def conectar_banco():
         conexao = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='( o _ 0 )',
+            password='',
             database='la_burguer'
         )
         cursor = conexao.cursor()
@@ -50,17 +51,22 @@ Button(janela_inicial, text="Acessar Menu", font=("Arial", 14), bg="green", fg="
 Button(janela_inicial, text="Conectar ao Banco", font=("Arial", 14), bg="blue", fg="white", command=conectar_banco).pack(pady=10)
 
 # ---------------- Janela principal (oculta no início) ----------------
-janela_menu = Tk()
+janela_menu = Toplevel()
 janela_menu.withdraw()
-janela_menu.title("La_burguer_menu")
+janela_menu.title("La Burguer - Menu")
 janela_menu.geometry("1300x1000")
 
 # --- Imagem de fundo ---
-papel_parede = Image.open("/home/joao-pedro/Documents/GitHub/La_Burguer/imagens/La-burguer (2).png")
-tk_imagem = ImageTk.PhotoImage(papel_parede)
-Label(janela_menu, image=tk_imagem).pack()
+caminho_imagem = "la_burguer.png"  # Caminho relativo, coloque a imagem na mesma pasta
 
-# --- Carrinho e botões (seu código permanece igual aqui em diante) ---
+if os.path.exists(caminho_imagem):
+    imagem = Image.open(caminho_imagem)
+    tk_imagem = ImageTk.PhotoImage(imagem)
+    Label(janela_menu, image=tk_imagem).pack()
+else:
+    Label(janela_menu, text="Imagem não encontrada", font=("Arial", 16), fg="red").pack()
+
+# --- Carrinho e botões ---
 contador_itens = {'item1': 0, 'item2': 0, 'item3': 0, 'item4': 0}
 label_do_contador = {
     'item1': Label(janela_menu, text="0"),
@@ -115,11 +121,11 @@ Button(janela_menu, text="Prosseguir com a compra", fg="white", bg="green",
        font=("Arial", 12, "bold"), command=prosseguir_compra).place(x=550, y=630, width=200, height=40)
 
 def finalizar_compra():
-    janela_finaalizar = Toplevel()
-    janela_finaalizar.title("Finalizar compra")
-    janela_finaalizar.geometry("500x600")
+    janela_finalizar = Toplevel()
+    janela_finalizar.title("Finalizar compra")
+    janela_finalizar.geometry("500x600")
 
-    frame_itens = Frame(janela_finaalizar)
+    frame_itens = Frame(janela_finalizar)
     frame_itens.pack(pady=20)
 
     Label(frame_itens, text="Itens selecionados", font="Arial 14 bold").pack()
@@ -141,9 +147,9 @@ def finalizar_compra():
             valor_total += subtotal
         contador += 1
 
-    Label(janela_finaalizar, text=f"\nTotal a pagar: R$ {valor_total:.2f}", font="Arial 14 bold").pack()
-    Label(janela_finaalizar, text="Digite o valor pago (R$):", font="Arial 12").pack(pady=5)
-    entrada_valor_pago = Entry(janela_finaalizar, font="Arial 12")
+    Label(janela_finalizar, text=f"\nTotal a pagar: R$ {valor_total:.2f}", font="Arial 14 bold").pack()
+    Label(janela_finalizar, text="Digite o valor pago (R$):", font="Arial 12").pack(pady=5)
+    entrada_valor_pago = Entry(janela_finalizar, font="Arial 12")
     entrada_valor_pago.pack()
 
     def calcular_troco():
@@ -154,11 +160,11 @@ def finalizar_compra():
             else:
                 troco = valor_pago - valor_total
                 messagebox.showinfo("Pagamento aprovado", f"Troco: R$ {troco:.2f}")
-                janela_finaalizar.destroy()
+                janela_finalizar.destroy()
         except ValueError:
             messagebox.showerror("Erro", "Digite um valor numérico válido.")
 
-    Button(janela_finaalizar, text="Confirmar pagamento", command=calcular_troco,
+    Button(janela_finalizar, text="Confirmar pagamento", command=calcular_troco,
            bg="green", fg="white", font=("Arial", 12, "bold")).pack(pady=20)
 
 # ---------------- Iniciar programa ----------------
